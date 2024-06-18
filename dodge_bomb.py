@@ -9,13 +9,13 @@ WIDTH, HEIGHT = 1500, 700
 
 #こうかとんを動かすための辞書
 DELTA = {
-    pg.K_UP: (0, -5),
-    pg.K_DOWN: (0, +5),
-    pg.K_LEFT: (-5, 0),
-    pg.K_RIGHT: (+5, 0),
+    pg.K_UP: (0, -5), #上キーが押された時
+    pg.K_DOWN: (0, +5), #下キーが押された時
+    pg.K_LEFT: (-5, 0), #左キーが押された時
+    pg.K_RIGHT: (+5, 0), #右キーが押された時
 }
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def check_bound(rct:pg.Rect) -> tuple[bool, bool]:
     """
@@ -35,17 +35,15 @@ def direction_kk(): #こうかとんの向きを変える関数
     kk_img1 = pg.transform.flip(kk_img, True, False)
     return {
         (0, 0): kk_img,    #何も押していない時
-        (0, -5): pg.transform.rotozoom(kk_img1, 90, 1.0), #
-        (+5, -5): pg.transform.rotozoom(kk_img1, 45, 1.0),
-        (+5, 0):kk_img1,
-        (+5, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),
-        (0, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),
-        (-5, +5): pg.transform.rotozoom(kk_img, 45, 1.0),
-        (-5,0): pg.transform.rotozoom(kk_img, 0, 1.0),
-        (-5, -5): pg.transform.rotozoom(kk_img, -45, 1.0),
+        (0, -5): pg.transform.rotozoom(kk_img1, 90, 1.0),    #上を向いているとき
+        (+5, -5): pg.transform.rotozoom(kk_img1, 45, 1.0),   #右上を向いているとき
+        (+5, 0):kk_img1,   #右を向いているとき
+        (+5, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),  #右下を向いているとき
+        (0, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),  #下を向いているとき
+        (-5, +5): pg.transform.rotozoom(kk_img, 45, 1.0),   #左下を向いているとき
+        (-5,0): pg.transform.rotozoom(kk_img, 0, 1.0),   #右を向いているとき
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 1.0),  #左上を向いているとき
     }
-
-
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -95,19 +93,11 @@ def main():
         if not yoko: #横方向にはみ出たら
             vx *= -1
         if not tate:
-            vy *= -1
-        
+            vy *= -1      
 
-        
-            
+        pg.display.update()   
 
-        pg.display.update()
-
-
-        
-
-        
-
+    
 if __name__ == "__main__":
     pg.init()
     main()
