@@ -5,7 +5,7 @@ import pygame as pg
 import time
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1500, 700
 
 #こうかとんを動かすための辞書
 DELTA = {
@@ -15,6 +15,7 @@ DELTA = {
     pg.K_RIGHT: (+5, 0),
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 def check_bound(rct:pg.Rect) -> tuple[bool, bool]:
     """
@@ -29,13 +30,29 @@ def check_bound(rct:pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+def direction_kk(): #こうかとんの向きを変える関数
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0) #こうかとん左向き
+    kk_img1 = pg.transform.flip(kk_img, True, False)
+    return {
+        (0, 0): kk_img,    #何も押していない時
+        (0, -5): pg.transform.rotozoom(kk_img1, 90, 1.0), #
+        (+5, -5): pg.transform.rotozoom(kk_img1, 45, 1.0),
+        (+5, 0):kk_img1,
+        (+5, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),
+        (0, +5): pg.transform.rotozoom(kk_img1, -45, 1.0),
+        (-5, +5): pg.transform.rotozoom(kk_img, 45, 1.0),
+        (-5,0): pg.transform.rotozoom(kk_img, 0, 1.0),
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 1.0),
+    }
+
 
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    kk_imgs = direction_kk()
+    kk_img = kk_imgs[(0,0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
@@ -46,9 +63,7 @@ def main():
     y_bomb = random.randint(0,900)
     bomb_rect = bomb.get_rect()
     bomb_rect.center = x_bomb, y_bomb
-    vx, vy = +5, +5
-    
-    
+    vx, vy = +5, +5  
     tmr = 0
     while True:
         for event in pg.event.get():
@@ -71,19 +86,23 @@ def main():
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        kk_img = kk_imgs[tuple(sum_mv)]
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         bomb_rect.move_ip(vx, vy)
         yoko, tate = check_bound(bomb_rect)
+        screen.blit(kk_img, kk_rct)
         if not yoko: #横方向にはみ出たら
             vx *= -1
         if not tate:
             vy *= -1
-        screen.blit(kk_img, kk_rct) 
-        
         
 
+        
+            
+
         pg.display.update()
+
 
         
 
