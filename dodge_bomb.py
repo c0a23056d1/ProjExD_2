@@ -6,13 +6,16 @@ import time
 
 
 WIDTH, HEIGHT = 1600, 900
+
+#こうかとんを動かすための辞書
 DELTA = {
     pg.K_UP: (0, -5),
     pg.K_DOWN: (0, +5),
     pg.K_LEFT: (-5, 0),
-    pg.K_RIGHT: (+5, 0)
+    pg.K_RIGHT: (+5, 0),
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 def main():
@@ -23,11 +26,14 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
-    #x_enn = random(0,1600)
-    #y_enn = random(0,900)
-    #enn = pg.Surface((20, 20))
-    #pg.draw.circle(enn, (255, 255, 255), (10, 10), 10)
-    #enn.set_colorkey((0, 0, 0))
+    bomb = pg.Surface((20, 20))        #一辺が20の正方形Surface
+    pg.draw.circle(bomb, (255, 0, 0), (10, 10), 10)     #中心に半径10の赤い円を描画
+    bomb.set_colorkey((0, 0, 0))         #四隅の黒を透過させる
+    x_bomb = random.randint(0,1600)
+    y_bomb = random.randint(0,900)
+    bomb_rect = bomb.get_rect()
+    bomb_rect.center = x_bomb, y_bomb
+    vx, vy = +5, +5
     
     
     tmr = 0
@@ -39,11 +45,10 @@ def main():
 
         tmr += 1
         clock.tick(50)
-        #enn = pg.Surface((20, 20))
-        #pg.draw.circle(enn, (255, 255, 255), (10, 10), 10)
-        #enn.set_colorkey((0, 0, 0))
-        #screen.blit(enn, (x_enn, y_enn))
-        
+
+
+        screen.blit(bomb, bomb_rect)
+        bomb_rect.move_ip(vx, vy)
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, v in DELTA.items():
@@ -53,18 +58,8 @@ def main():
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct) 
         pg.display.update()
-        #"""def move_around(obj_rct:pg.Rect) -> tuple[int, int]:
-            #key_lst = pg.key.get_pressed()
-            #x, y = 0, 0
-            #if key_lst[pg.K_UP]:
-                #y = -5
-            #if key_lst[pg.K_DOWN]:
-                #y = 5
-            #if key_lst[pg.K_LEFT]:
-               # x = -5
-            #if key_lst[pg.K_RIGHT]:
-               # x = 5
-            #return (x, y)"""
+
+        
 
 if __name__ == "__main__":
     pg.init()
